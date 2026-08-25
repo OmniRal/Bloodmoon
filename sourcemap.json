@@ -306,6 +306,14 @@
 											]
 										},
 										{
+											"name": "MainMenuUI",
+											"className": "ModuleScript",
+											"children": [],
+											"filePaths": [
+												"Scripts/ReplicatedStorage/ClientModules/UI/MainMenuUI.lua"
+											]
+										},
+										{
 											"name": "ModalWindowUI",
 											"className": "ModuleScript",
 											"children": [],
@@ -319,14 +327,6 @@
 											"children": [],
 											"filePaths": [
 												"Scripts/ReplicatedStorage/ClientModules/UI/UI_Info.lua"
-											]
-										},
-										{
-											"name": "MainMenuUI",
-											"className": "ModuleScript",
-											"children": [],
-											"filePaths": [
-												"Scripts/ReplicatedStorage/ClientModules/UI/MainMenuUI.lua"
 											]
 										}
 									],
@@ -2647,6 +2647,14 @@
 											]
 										},
 										{
+											"name": "MapService",
+											"className": "ModuleScript",
+											"children": [],
+											"filePaths": [
+												"Scripts/ServerScriptService/ServerModules/General/MapService.lua"
+											]
+										},
+										{
 											"name": "ProjectileService",
 											"className": "ModuleScript",
 											"children": [],
@@ -2863,6 +2871,46 @@
 					"className": "Folder",
 					"children": [
 						{
+							"name": "Map",
+							"className": "Folder",
+							"children": [
+								{
+									"name": "Trees",
+									"className": "Folder",
+									"children": [
+										{
+											"name": "Forest",
+											"className": "Folder",
+											"children": [
+												{
+													"name": "Trees",
+													"className": "Model",
+													"filePaths": [],
+													"children": [
+														{
+															"name": "Base",
+															"className": "Part",
+															"filePaths": [],
+															"children": []
+														}
+													]
+												}
+											],
+											"filePaths": [
+												"Assets/Server/Map/Trees/Forest.rbxm"
+											]
+										}
+									],
+									"filePaths": [
+										"Assets/Server/Map/Trees"
+									]
+								}
+							],
+							"filePaths": [
+								"Assets/Server/Map"
+							]
+						},
+						{
 							"name": "Misc",
 							"className": "Folder",
 							"children": [
@@ -2997,6 +3045,14 @@
 											]
 										},
 										{
+											"name": "CameraController",
+											"className": "ModuleScript",
+											"children": [],
+											"filePaths": [
+												"Scripts/StarterPlayerScripts/General/CameraController.lua"
+											]
+										},
+										{
 											"name": "DeviceController",
 											"className": "ModuleScript",
 											"children": [],
@@ -3026,14 +3082,6 @@
 											"children": [],
 											"filePaths": [
 												"Scripts/StarterPlayerScripts/General/WorldUIController.lua"
-											]
-										},
-										{
-											"name": "CameraController",
-											"className": "ModuleScript",
-											"children": [],
-											"filePaths": [
-												"Scripts/StarterPlayerScripts/General/CameraController.lua"
 											]
 										}
 									],
