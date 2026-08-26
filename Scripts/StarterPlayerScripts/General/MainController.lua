@@ -22,16 +22,16 @@ local Workspace = game:GetService("Workspace")
 
 local Remotes = require(ReplicatedStorage.Source.Pronghorn.Remotes)
 
-
-local CameraController = require(StarterPlayer.StarterPlayerScripts.Source.General.CameraController)
-local MainUIController = require(StarterPlayer.StarterPlayerScripts.Source.General.MainUIController)
-local AnimationController = require(StarterPlayer.StarterPlayerScripts.Source.General.AnimationController)
-
-local Utility = require(ReplicatedStorage.Source.SharedModules.General.Utility)
-
-local SharedGlobalValues = require(ReplicatedStorage.Source.SharedModules.Top.SharedGlobalValues)
+--local SharedGlobalValues = require(ReplicatedStorage.Source.SharedModules.Top.SharedGlobalValues)
 local PlayerInfo = require(StarterPlayer.StarterPlayerScripts.Source.Other.PlayerInfo)
 local CustomEnum = require(ReplicatedStorage.Source.SharedModules.Info.CustomEnum)
+
+local LevelController = require(ReplicatedStorage.Source.ClientModules.General.LevelController)
+local CameraController = require(StarterPlayer.StarterPlayerScripts.Source.General.CameraController)
+local MainUIController = require(StarterPlayer.StarterPlayerScripts.Source.General.MainUIController)
+--local AnimationController = require(StarterPlayer.StarterPlayerScripts.Source.General.AnimationController)
+
+local Utility = require(ReplicatedStorage.Source.SharedModules.General.Utility)
 
 local ControlModule
 
@@ -39,18 +39,11 @@ local ControlModule
 -- Constants
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-local VOICELINE_REQUEST_COOLDOWN = 3
-
-local AIM_UP_DEGREES = 40
-local AIM_DOWN_DEGREES = -60
-
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Remotes
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-local NPCService = Remotes.Client.NPCService
 local DataService = Remotes.Client.DataService
-local PushService = Remotes.Client.PushService
 local RagdollService = Remotes.Client.RagdollService
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -239,15 +232,9 @@ function MainController:Deferred()
         ControlModule = require(GotControlModule)
     end
 
-	--[[while true do
-		task.wait()
-		if not Remotes.Client.DataService or not Remotes.Client.PushService then continue end
-		DataService = Remotes.Client.DataService
-		PushService = Remotes.Client.PushService
-		break
-	end]]
+	Utility.CheckRemotesLoaded({"DataService"})
 
-	Utility.CheckRemotesLoaded({"DataService", "PushService"})
+	DataService = Remotes.Client.DataService
 
     DataService.FullDataUpdate:Connect(function(Data: any)
         PlayerInfo.Data = Data
@@ -302,12 +289,6 @@ function MainController:Deferred()
 	Camera:GetPropertyChangedSignal("CFrame"):Connect(function() 
 		if not PlayerInfo.PushStarted then return end
 	end)
-
-    PushService.ScoreChanged:Connect(function(Points: number, Streak: number, Multipler: number)
-		PlayerInfo.CurrentPoints = Points
-		PlayerInfo.CurrentStreak = Streak
-		PlayerInfo.CurrentMultiplier = Multipler
-    end)
 
 	print("Main Controller Deferred...")
 end

@@ -333,6 +333,23 @@
 									"filePaths": [
 										"Scripts/ReplicatedStorage/ClientModules/UI"
 									]
+								},
+								{
+									"name": "General",
+									"className": "Folder",
+									"children": [
+										{
+											"name": "LevelController",
+											"className": "ModuleScript",
+											"children": [],
+											"filePaths": [
+												"Scripts/ReplicatedStorage/ClientModules/General/LevelController.lua"
+											]
+										}
+									],
+									"filePaths": [
+										"Scripts/ReplicatedStorage/ClientModules/General"
+									]
 								}
 							],
 							"filePaths": [
@@ -2497,6 +2514,69 @@
 							"filePaths": [
 								"Assets/Replicated/UIs"
 							]
+						},
+						{
+							"name": "Level",
+							"className": "Folder",
+							"children": [
+								{
+									"name": "Trees",
+									"className": "Folder",
+									"children": [
+										{
+											"name": "Forest",
+											"className": "Folder",
+											"filePaths": [],
+											"children": [
+												{
+													"name": "Tree",
+													"className": "Model",
+													"filePaths": [],
+													"children": [
+														{
+															"name": "Root",
+															"className": "Part",
+															"filePaths": [],
+															"children": []
+														},
+														{
+															"name": "Visual",
+															"className": "Model",
+															"filePaths": [],
+															"children": [
+																{
+																	"name": "Leaves_2",
+																	"className": "MeshPart",
+																	"filePaths": [],
+																	"children": []
+																},
+																{
+																	"name": "Leaves_1",
+																	"className": "MeshPart",
+																	"filePaths": [],
+																	"children": []
+																},
+																{
+																	"name": "Base",
+																	"className": "MeshPart",
+																	"filePaths": [],
+																	"children": []
+																}
+															]
+														}
+													]
+												}
+											]
+										}
+									],
+									"filePaths": [
+										"Assets/Replicated/Level/Trees.rbxm"
+									]
+								}
+							],
+							"filePaths": [
+								"Assets/Replicated/Level"
+							]
 						}
 					],
 					"filePaths": [
@@ -2647,14 +2727,6 @@
 											]
 										},
 										{
-											"name": "MapService",
-											"className": "ModuleScript",
-											"children": [],
-											"filePaths": [
-												"Scripts/ServerScriptService/ServerModules/General/MapService.lua"
-											]
-										},
-										{
 											"name": "ProjectileService",
 											"className": "ModuleScript",
 											"children": [],
@@ -2708,6 +2780,14 @@
 											"children": [],
 											"filePaths": [
 												"Scripts/ServerScriptService/ServerModules/General/WorldUIService.lua"
+											]
+										},
+										{
+											"name": "LevelService",
+											"className": "ModuleScript",
+											"children": [],
+											"filePaths": [
+												"Scripts/ServerScriptService/ServerModules/General/LevelService.lua"
 											]
 										}
 									],
@@ -2871,46 +2951,6 @@
 					"className": "Folder",
 					"children": [
 						{
-							"name": "Map",
-							"className": "Folder",
-							"children": [
-								{
-									"name": "Trees",
-									"className": "Folder",
-									"children": [
-										{
-											"name": "Forest",
-											"className": "Folder",
-											"children": [
-												{
-													"name": "Trees",
-													"className": "Model",
-													"filePaths": [],
-													"children": [
-														{
-															"name": "Base",
-															"className": "Part",
-															"filePaths": [],
-															"children": []
-														}
-													]
-												}
-											],
-											"filePaths": [
-												"Assets/Server/Map/Trees/Forest.rbxm"
-											]
-										}
-									],
-									"filePaths": [
-										"Assets/Server/Map/Trees"
-									]
-								}
-							],
-							"filePaths": [
-								"Assets/Server/Map"
-							]
-						},
-						{
 							"name": "Misc",
 							"className": "Folder",
 							"children": [
@@ -2982,6 +3022,23 @@
 							],
 							"filePaths": [
 								"Assets/Server/Misc"
+							]
+						},
+						{
+							"name": "Level",
+							"className": "Folder",
+							"children": [
+								{
+									"name": "BaseTree",
+									"className": "Part",
+									"children": [],
+									"filePaths": [
+										"Assets/Server/Level/BaseTree.rbxm"
+									]
+								}
+							],
+							"filePaths": [
+								"Assets/Server/Level"
 							]
 						}
 					],

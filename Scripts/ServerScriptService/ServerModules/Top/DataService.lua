@@ -156,93 +156,6 @@ local function PlayerRemoving(Player: Player)
 	Profile:Release()
 end
 
---[[function DataService.Client:GetIndex(...)
-return DataService:GetIndex(...)
-end]]
-
-local function RequestChangePVPMode(Player: Player)
-	if not Player then return end
-	if not Player.Character then return "Dead!" end -- Needs to exist and be alive
-	local Alive: boolean, _, Human: Humanoid, Root: BasePart = Utility.Players.CheckAlive(Player)
-	if not Alive or not Human or not Root then return "Dead!" end
-	
-	-- Make sure the player is not moving
-	if Human.MoveDirection.Magnitude > SharedGlobalValues.ChangePVPMode_PlayerVelocityTolerance then return "Cange change while moving!" end
-	if Root.AssemblyAngularVelocity.Magnitude > SharedGlobalValues.ChangePVPMode_PlayerVelocityTolerance then return "Can't change while moving!" end
-	
-	-- Make sure not close to other players
-	for _, OtherPlayer in Players:GetPlayers() do
-		if not OtherPlayer then continue end
-		if OtherPlayer == Player then continue end
-		local OtherAlive: boolean, _, _, OtherRoot: BasePart = Utility.Players.CheckAlive(OtherPlayer)
-		if not OtherAlive or not OtherRoot then continue end
-		
-		if (Root.Position - OtherRoot.Position).Magnitude > SharedGlobalValues.ChangePVPMode_PlayerRange then continue end
-		
-		return "Too close to other players!"
-	end
-	
-	DataService.WaitForPlayerDataLoaded(Player)
-	local PData = Profiles[Player].Data
-	if not PData then print("Data not found while trying to change PVP Mode for", Player.Name); return "DataMissing" end
-	if PData.PVPMode == nil or PData.LastPVPChange == nil then print("PVPMode or LastPVPChange data not found while trying to change PVP mode for", Player.Name); return end
-	
-	-- Make sure its not on cooldown
-
-	if os.time() < PData.LastPVPChange + SharedGlobalValues.ChangePVPModeCooldown then return "On cooldown!" end
-	
-	-- Save data
-	PData.LastPVPChange = os.time()
-	PData.PVPMode = not PData.PVPMode
-	PData.SavedTime = 0
-	PData.TimerActive = PData.PVPMode
-	PData.TimerStartedAt = Workspace:GetServerTimeNow()
-
-	-- Send updated data to player
-	Remotes.Server.DataService.MultiDataUpdate:Fire(Player, {
-		LastPVPChange = os.time(),
-		PVPMode = PData.PVPMode,
-		SavedTime = PData.SavedTime,
-		TimerActive = PData.TimerActive,
-		TimerStartedAt = Workspace:GetServerTimeNow()
-	})
-
-	-- Change respective attributes (they exist so other players can see how who is in PVP mode and their timers)
-	Player:SetAttribute("PVPMode", PData.PVPMode)
-	Player:SetAttribute("SavedTime", 0)
-	Player:SetAttribute("TimerActive", PData.TimerActive)
-	Player:SetAttribute("TimerStartedAt", Workspace:GetServerTimeNow()) 
-	
-	return 1
-end
-
-local function RequestUpgradeSkill(Player: Player, ThisSkill: string)
-	if not Player then return end
-	
-	-- Check if they are allowed to
-	DataService.WaitForPlayerDataLoaded(Player)
-	local PData = Profiles[Player].Data
-	if not PData then print("Data not found while trying to upgrade skill for", Player.Name); return "-DataMissing"; end
-	if not PData.Skills or not PData.SkillPoints then print("Skills or SkillPoints data not found while trying to upgrade skill for", Player.Name); return "-DataMissing" end
-	if not PData.Skills[ThisSkill] then print(ThisSkill, " is not a valid skill"); return "-SkillIncorrect" end
-	if PData.Skills[ThisSkill] >= 5 then return "Skill maxed!" end
-	if PData.SkillPoints <= 0 then return "Need skill points!" end
-	
-	-- Prevent too many changes at once
-	if UpgradeSkillRequests[Player] then return "TooManyRequests" end
-	UpgradeSkillRequests[Player] = true
-	
-	PData.SkillPoints -= 1
-	PData.Skills[ThisSkill] += 1
-	
-	Remotes.Server.DataService.MultiDataUpdate:Fire(Player, {SkillPoints = PData.SkillPoints, Skills = PData.Skills})
-	
-	-- Decent cooldown before can upgrade again
-	task.delay(0.5, function() UpgradeSkillRequests[Player] = false end)
-	
-	return 1
-end
-
 -- Make an item in the players data no longer new
 local function RequestNotNew(Player: Player, ItemDestination: {string}): boolean
 	DataService.WaitForPlayerDataLoaded(Player)
@@ -337,7 +250,7 @@ function DataService.IncrementIndex(Player: Player, Index: string, Increment: nu
 	DataService.WaitForPlayerDataLoaded(Player)
 	local PData = Profiles[Player].Data
 	
-	if Index == "XP" then
+	--[[if Index == "XP" then
 		local NewLevel = PData.Level
 		local CurrentXP = PData.XP + Increment
 		
@@ -371,7 +284,7 @@ function DataService.IncrementIndex(Player: Player, Index: string, Increment: nu
 		Remotes.Server.DataService.MultiDataUpdate:Fire(Player, UpdateList)
 		Remotes.Server.DataService.GiveAddXP:Fire(Player, Increment)
 		return
-	end
+	end]]
 	
 	PData[Index] += Increment
 	
@@ -481,8 +394,6 @@ function DataService:Init()
 	Remotes.Server:CreateToClient("GiveAddXP", {"number"}, "Reliable")
 	
 	Remotes.Server:CreateToServer("RequestNotNew", {"table"}, "Returns", function(Player: Player, ItemDestination: {string}) RequestNotNew(Player, ItemDestination) end)
-	Remotes.Server:CreateToServer("RequestUpgradeSkill", {"string"}, "Returns", function(Player: Player, ThisSkill: string) return RequestUpgradeSkill(Player, ThisSkill) end)
-	Remotes.Server:CreateToServer("RequestChangePVPMode", {}, "Returns", function(Player: Player) return RequestChangePVPMode(Player) end)
 	Remotes.Server:CreateToServer("RequestChangeSetting", {"string", "any"}, "Returns", function(Player: Player, ThisSetting: string, Value: any) return RequestChangeSetting(Player, ThisSetting, Value) end)
 	
 	--[[for WeaponName, W_Info in pairs(WeaponInfo) do

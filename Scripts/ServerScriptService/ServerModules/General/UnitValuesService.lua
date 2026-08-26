@@ -33,7 +33,7 @@ local BaseAttributes : UnitEnum.BaseAttributes = {
     Mana = 100,
     ManaGain = 1,
     Armor = 0,
-    WalkSpeed = 10,
+    WalkSpeed = 8,
     AttackSpeed = 0,
     CritChance = 0,
     CritPercent = 0,
@@ -588,19 +588,7 @@ function UnitValuesService:New(Unit: Player | Model, StartAttributes: {}?)
         return
     end
 
-    local Base : UnitEnum.BaseAttributes = {
-        Health = 100,
-        HealthGain = 1,
-        Mana = 50,
-        ManaGain = 1,
-        Armor = 0,
-        WalkSpeed = 12,
-        AttackSpeed = 100,
-        CritChance = 0,
-        CritPercent = 0,
-        Damage = 0,
-        CooldownReduction = 0,
-    }
+    local Base : UnitEnum.BaseAttributes = BaseAttributes
     
     if StartAttributes then
         for Key, Num in StartAttributes do
