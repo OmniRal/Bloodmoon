@@ -30,6 +30,10 @@ local SHOW_TREE_BASES = true
 local NOISE_SCALE = 10
 local CELL_SIZE = 4
 
+local MAX_WEAVE_PATH_STEPS = 100
+local DEFAULT_ARRIVE_RANGE = 16
+local DEFAULT_WEAVE_WIDTH = 6
+
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Remotes
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -40,6 +44,9 @@ local CELL_SIZE = 4
 
 local LevelSizes: {number} = {220, 340, 420, 540}
 
+local MapPoints: {CFrame} = {} -- Where map fragments will be placed
+local PathPoints: {CFrame} = {}
+
 local Assets = ServerStorage.Assets
 local RNG = Random.new()
 
@@ -47,8 +54,62 @@ local RNG = Random.new()
 -- Private Functions
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-local function ArePointsClose(A: Vector3, B: Vector3, Range: number)
+-- Snap a number to the cell grid
+-- @Offset = If TRUE, reduces the number by half of the cell size
+local function SnapToGrid(Num: number, Offset: boolean?): number
+	return math.round(Num / CELL_SIZE) * CELL_SIZE + (if Offset then -2 else 0)
+end
+
+local function ArePointsClose(A: Vector3, B: Vector3, Range: number): boolean
 	return (A - B).Magnitude <= Range
+end
+
+local function IsPointCloseToAnyInList(ThisPoint: Vector3, ThisList: {CFrame | Vector3}, Range: number): boolean
+	if not ThisPoint or not ThisList then return false end
+
+	for _, Point in ThisList do
+		if typeof(Point) == "CFrame" then
+			if not ArePointsClose(ThisPoint, Point.Position, Range) then continue end
+			return true
+
+		elseif typeof(Point) == "Vector3" then
+			if not ArePointsClose(ThisPoint, Point, Range) then continue end
+			return true
+		end
+	end
+
+	return false
+end
+
+--  Weaves a curvy path between two points
+-- @ArriveRange = How close to the goal counts as "arriving"
+-- @Width = How wide the path should; how many cells it allocates per step
+local function CarveWeavingPathFrom(Start: Vector3, Goal: Vector3, ArriveRange: number?, Width: number?)
+	local CurrentStep = CFrame.new(Vector3.new(Start.X, 0, Start.Z), Vector3.new(Goal.X, 0, Goal.Z))
+	local Angles = {-45, -30, 30, 45}
+	
+	for _ = 1, MAX_WEAVE_PATH_STEPS do
+		-- Twist path left or right
+		CurrentStep *= CFrame.Angles(0, math.rad(Angles[RNG:NextInteger(1, 4)]), 0)
+
+		-- Step forward
+		CurrentStep *= CFrame.new(0, 0, -CELL_SIZE * 2)
+		--[[local Dot = Utility.CreateDot(CurrentStep, Vector3.new(3, 3, 3), Enum.PartType.Block, Color3.fromRGB(0, 255, 0))
+		Dot.Material = Enum.Material.SmoothPlastic
+		Dot.FrontSurface = "Hinge"]]
+
+		CurrentStep = CFrame.new(SnapToGrid(CurrentStep.Position.X), 0, SnapToGrid(CurrentStep.Position.Z))
+
+		-- Add path cell if it's not already added
+		if not table.find(PathPoints, CurrentStep) then
+			table.insert(PathPoints, CurrentStep)
+		end
+
+		if ArePointsClose(CurrentStep.Position, Goal, ArriveRange or DEFAULT_ARRIVE_RANGE) then break end
+
+		-- Reset current step
+		CurrentStep = CFrame.new(Vector3.new(CurrentStep.Position.X, 0, CurrentStep.Position.Z), Vector3.new(Goal.X, 0, Goal.Z))
+	end
 end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -63,34 +124,36 @@ function LevelService.Build(LevelName: string, OverrideSize: number?)
 	local LevelWidth = OverrideSize or LevelSizes[math.clamp(#Players:GetChildren(), SharedGlobalValues.MinPlayers, SharedGlobalValues.MaxPlayers)]
 	local TotalCells = LevelWidth / CELL_SIZE
 
-	local MapPoints: {CFrame} = {} -- Where map fragments will be placed
-	local MapPlaceCalc = (TotalCells - 4) * (CELL_SIZE / 2)
+	local MapPlaceCalc = ((LevelWidth / 2) - 20)
 
 	for _ = 1, 4 do
 		-- Try to make sure two map points are not too close to each other
 		local NewPoint: CFrame
 		for _ = 1, 100 do
 			NewPoint = CFrame.new(
-				RNG:NextInteger(-MapPlaceCalc, MapPlaceCalc),
+				SnapToGrid(RNG:NextInteger(-MapPlaceCalc, MapPlaceCalc)),
 				0,
-				RNG:NextInteger(-MapPlaceCalc, MapPlaceCalc)
+				SnapToGrid(RNG:NextInteger(-MapPlaceCalc, MapPlaceCalc))
 			)
 
 			if #MapPoints <= 0 then break end
+			if IsPointCloseToAnyInList(NewPoint.Position, MapPoints, 40) then continue end
 
-			local IsClose = false
-			for _, OtherPoint in MapPoints do
-				if not ArePointsClose(NewPoint.Position, OtherPoint.Position, 40) then continue end
-				IsClose = true
-				break
-			end
-
-			if IsClose then continue end
 			break
 		end
 		table.insert(MapPoints, NewPoint)
 		Utility.CreateDot(NewPoint, Vector3.new(4, 4, 4), Enum.PartType.Ball, Color3.fromRGB(255, 0, 0))
 	end
+
+	local PathCombosMade: {{A: number, B: number}} = {}
+	for _ = 1, RNG:NextInteger(1, 4) do
+		
+	end
+	CarveWeavingPathFrom(MapPoints[1].Position, MapPoints[2].Position)
+	CarveWeavingPathFrom(MapPoints[2].Position, MapPoints[3].Position)
+	CarveWeavingPathFrom(MapPoints[3].Position, MapPoints[4].Position)
+	CarveWeavingPathFrom(MapPoints[4].Position, MapPoints[1].Position)
+
 	
 	-- Make the trees
 	local TreeFolder = New.Instance("Folder", "Trees", LevelFolder)
@@ -102,16 +165,9 @@ function LevelService.Build(LevelName: string, OverrideSize: number?)
 			CurrentCF *= CFrame.new(0, 0, CELL_SIZE)
 			if Noise > 0.12 then continue end
 
-			-- Check to make sure it's not near any map fragments
-			local IsClose = false
-			for _, Point in MapPoints do
-				if not Point then continue end
-				if not ArePointsClose(PlaceHere.Position, Point.Position, 8) then continue end
-				IsClose = true
-				break
-			end
-
-			if IsClose then continue end
+			-- Check to make sure it's not near any map fragments, path points
+			if IsPointCloseToAnyInList(CurrentCF.Position, MapPoints, 8) then continue end
+			if IsPointCloseToAnyInList(CurrentCF.Position, PathPoints, DEFAULT_WEAVE_WIDTH) then continue end
 
 			local NewTreeBase = Assets.Level.BaseTree:Clone()
 			NewTreeBase.CFrame = PlaceHere

@@ -7,6 +7,7 @@ local LevelController = {}
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TweenService = game:GetService("TweenService")
 local Workspace = game:GetService("Workspace")
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -19,6 +20,8 @@ local Utility = require(ReplicatedStorage.Source.SharedModules.General.Utility)
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Constants
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+local TREE_SHAKE_COOLDOWN = 1.1
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Remotes
@@ -37,6 +40,24 @@ local RNG = Random.new()
 -- Private Functions
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+local function ForestTreeShake(LeavesData: {[BasePart]: CFrame})
+	local ShakeAngles = {15, 30, 45}
+
+	for Leaves, OriginalCF in LeavesData do
+		if not Leaves or not OriginalCF then continue end
+
+		local StartTime = RNG:NextNumber(0.2, 0.35)
+
+		local Tween_1 = TweenService:Create(Leaves, TweenInfo.new(StartTime, Enum.EasingStyle.Sine, Enum.EasingDirection.In), {
+			CFrame = OriginalCF * CFrame.Angles(0, math.rad(ShakeAngles[RNG:NextInteger(1, 3)] * (-1 + (RNG:NextInteger(0, 1) * 2))), 0)})
+
+		local Tween_2 = TweenService:Create(Leaves, TweenInfo.new(1 - StartTime, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {CFrame = OriginalCF})
+
+		Tween_1.Completed:Connect(function() if not Tween_2 then return end; Tween_2:Play() end)
+		Tween_1:Play()
+	end
+end
+
 local function PlaceTrees(LevelName: string, TreeFolder: Folder)
 	if not TreeFolder then return end
 
@@ -46,6 +67,9 @@ local function PlaceTrees(LevelName: string, TreeFolder: Folder)
 	for _, BaseTree in TreeFolder:GetChildren() do
 		if not BaseTree then continue end
 		BaseTree.Transparency = 1
+
+		-- Add the visual
+		local LeavesData: {[BasePart]: CFrame} = {}
 		local NewTree = TreeAssets[RNG:NextInteger(1, #TreeAssets)]:Clone()
 		NewTree.Visual:PivotTo(
 			BaseTree.CFrame *
@@ -53,6 +77,24 @@ local function PlaceTrees(LevelName: string, TreeFolder: Folder)
 			CFrame.Angles(0, math.rad(RNG:NextInteger(-15, 15)), 0)
 		)
 		NewTree.Parent = TreeFolder
+
+		-- Store the leaves and their original CFrame
+		for _, Leaves in NewTree.Visual:GetChildren() do
+			if not Leaves then continue end
+			LeavesData[Leaves] = Leaves.CFrame
+		end
+
+		-- Create the touch connection w/ animation
+		BaseTree.CanTouch = true
+		BaseTree.Touched:Connect(function()
+			BaseTree.CanTouch = false
+
+			-- Shake tweens for the leaves
+			ForestTreeShake(LeavesData)
+
+			task.wait(TREE_SHAKE_COOLDOWN)
+			BaseTree.CanTouch = true
+		end)
 
 		TotalPlaced += 1
 		if TotalPlaced % 10 == 0 then task.wait() end
