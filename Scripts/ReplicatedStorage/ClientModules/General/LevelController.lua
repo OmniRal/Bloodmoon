@@ -85,8 +85,11 @@ local function PlaceTrees(LevelName: string, TreeFolder: Folder)
 		end
 
 		-- Create the touch connection w/ animation
+		local Debounce = false
 		BaseTree.CanTouch = true
 		BaseTree.Touched:Connect(function()
+			if Debounce then return end
+			Debounce = true
 			BaseTree.CanTouch = false
 
 			-- Shake tweens for the leaves
@@ -94,6 +97,7 @@ local function PlaceTrees(LevelName: string, TreeFolder: Folder)
 
 			task.wait(TREE_SHAKE_COOLDOWN)
 			BaseTree.CanTouch = true
+			Debounce = false
 		end)
 
 		TotalPlaced += 1

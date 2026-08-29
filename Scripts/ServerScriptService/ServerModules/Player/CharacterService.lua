@@ -21,7 +21,7 @@ local New = require(ReplicatedStorage.Source.Pronghorn.New)
 
 local ServerGlobalValues = require(ServerScriptService.Source.ServerModules.Top.ServerGlobalValues)
 
-local UnitManagerService = require(ServerScriptService.Source.ServerModules.General.UnitManagerService)
+--local UnitManagerService = require(ServerScriptService.Source.ServerModules.General.UnitManagerService)
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Constants
@@ -93,10 +93,10 @@ function CharacterService:SetupCharacter(Player: Player, SpawnHere: CFrame?)
             Part.CollisionGroup = "Players"
         end
 
-        task.delay(0.25, function()
+        --[[task.delay(0.25, function()
             if not ServerGlobalValues.InLevel then return end
             UnitManagerService:AddUnit(Player)
-        end)
+        end)]]
 
         --[[for _, Sound in pairs(Assets.Misc.CharacterSounds:GetChildren()) do
             print(Sound.Name, " added to ", Player.Name)

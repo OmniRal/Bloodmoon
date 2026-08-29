@@ -576,14 +576,6 @@
 											"filePaths": [
 												"Scripts/ReplicatedStorage/SharedModules/Info/ShopInfo.lua"
 											]
-										},
-										{
-											"name": "StickerInfo",
-											"className": "ModuleScript",
-											"children": [],
-											"filePaths": [
-												"Scripts/ReplicatedStorage/SharedModules/Info/StickerInfo.lua"
-											]
 										}
 									],
 									"filePaths": [
@@ -2767,27 +2759,19 @@
 											]
 										},
 										{
-											"name": "UnitManagerService",
-											"className": "ModuleScript",
-											"children": [],
-											"filePaths": [
-												"Scripts/ServerScriptService/ServerModules/General/UnitManagerService.lua"
-											]
-										},
-										{
-											"name": "UnitValuesService",
-											"className": "ModuleScript",
-											"children": [],
-											"filePaths": [
-												"Scripts/ServerScriptService/ServerModules/General/UnitValuesService.lua"
-											]
-										},
-										{
 											"name": "WorldUIService",
 											"className": "ModuleScript",
 											"children": [],
 											"filePaths": [
 												"Scripts/ServerScriptService/ServerModules/General/WorldUIService.lua"
+											]
+										},
+										{
+											"name": "UnitService",
+											"className": "ModuleScript",
+											"children": [],
+											"filePaths": [
+												"Scripts/ServerScriptService/ServerModules/General/UnitService/UnitService.init.lua"
 											]
 										}
 									],
@@ -2929,6 +2913,31 @@
 							"children": [],
 							"filePaths": [
 								"Scripts/ServerScriptService/ServerSetup.lua"
+							]
+						},
+						{
+							"name": "OldCopies",
+							"className": "Folder",
+							"children": [
+								{
+									"name": "UnitManagerService_OLD",
+									"className": "ModuleScript",
+									"children": [],
+									"filePaths": [
+										"Scripts/ServerScriptService/OldCopies/UnitManagerService_OLD.lua"
+									]
+								},
+								{
+									"name": "UnitValuesService_OLD",
+									"className": "ModuleScript",
+									"children": [],
+									"filePaths": [
+										"Scripts/ServerScriptService/OldCopies/UnitValuesService_OLD.lua"
+									]
+								}
+							],
+							"filePaths": [
+								"Scripts/ServerScriptService/OldCopies"
 							]
 						}
 					],

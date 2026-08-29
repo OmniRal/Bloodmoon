@@ -211,7 +211,7 @@ end
 
 function MainController:RunHeartbeat()
     CheckGrounded()
-    UpdateWalkSpeed()
+    --UpdateWalkSpeed()
 end
 
 function MainController:Init()
