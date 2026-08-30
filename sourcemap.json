@@ -206,6 +206,14 @@
 											"filePaths": [
 												"Scripts/ReplicatedStorage/ClientModules/General/LevelController.lua"
 											]
+										},
+										{
+											"name": "LightingController",
+											"className": "ModuleScript",
+											"children": [],
+											"filePaths": [
+												"Scripts/ReplicatedStorage/ClientModules/General/LightingController.lua"
+											]
 										}
 									],
 									"filePaths": [
@@ -1381,6 +1389,72 @@
 																{
 																	"name": "Base",
 																	"className": "MeshPart",
+																	"filePaths": [],
+																	"children": [
+																		{
+																			"name": "Bark_Grooved",
+																			"className": "SurfaceAppearance",
+																			"filePaths": [],
+																			"children": []
+																		}
+																	]
+																},
+																{
+																	"name": "Leaves",
+																	"className": "MeshPart",
+																	"filePaths": [],
+																	"children": [
+																		{
+																			"name": "Leaves_1_3",
+																			"className": "SurfaceAppearance",
+																			"filePaths": [],
+																			"children": []
+																		}
+																	]
+																}
+															]
+														}
+													]
+												}
+											]
+										},
+										{
+											"name": "Tree",
+											"className": "Model",
+											"filePaths": [],
+											"children": [
+												{
+													"name": "Root",
+													"className": "Part",
+													"filePaths": [],
+													"children": []
+												},
+												{
+													"name": "Visual",
+													"className": "Model",
+													"filePaths": [],
+													"children": [
+														{
+															"name": "Leaves",
+															"className": "MeshPart",
+															"filePaths": [],
+															"children": [
+																{
+																	"name": "Leaves_1_3",
+																	"className": "SurfaceAppearance",
+																	"filePaths": [],
+																	"children": []
+																}
+															]
+														},
+														{
+															"name": "Base",
+															"className": "MeshPart",
+															"filePaths": [],
+															"children": [
+																{
+																	"name": "Bark_Grooved",
+																	"className": "SurfaceAppearance",
 																	"filePaths": [],
 																	"children": []
 																}
@@ -2621,6 +2695,31 @@
 					"className": "Folder",
 					"children": [
 						{
+							"name": "OldCopies",
+							"className": "Folder",
+							"children": [
+								{
+									"name": "UnitManagerService_OLD",
+									"className": "ModuleScript",
+									"children": [],
+									"filePaths": [
+										"Scripts/ServerScriptService/OldCopies/UnitManagerService_OLD.lua"
+									]
+								},
+								{
+									"name": "UnitValuesService_OLD",
+									"className": "ModuleScript",
+									"children": [],
+									"filePaths": [
+										"Scripts/ServerScriptService/OldCopies/UnitValuesService_OLD.lua"
+									]
+								}
+							],
+							"filePaths": [
+								"Scripts/ServerScriptService/OldCopies"
+							]
+						},
+						{
 							"name": "ProfileService",
 							"className": "ModuleScript",
 							"children": [],
@@ -2759,19 +2858,19 @@
 											]
 										},
 										{
-											"name": "WorldUIService",
-											"className": "ModuleScript",
-											"children": [],
-											"filePaths": [
-												"Scripts/ServerScriptService/ServerModules/General/WorldUIService.lua"
-											]
-										},
-										{
 											"name": "UnitService",
 											"className": "ModuleScript",
 											"children": [],
 											"filePaths": [
 												"Scripts/ServerScriptService/ServerModules/General/UnitService/UnitService.init.lua"
+											]
+										},
+										{
+											"name": "WorldUIService",
+											"className": "ModuleScript",
+											"children": [],
+											"filePaths": [
+												"Scripts/ServerScriptService/ServerModules/General/WorldUIService.lua"
 											]
 										}
 									],
@@ -2913,31 +3012,6 @@
 							"children": [],
 							"filePaths": [
 								"Scripts/ServerScriptService/ServerSetup.lua"
-							]
-						},
-						{
-							"name": "OldCopies",
-							"className": "Folder",
-							"children": [
-								{
-									"name": "UnitManagerService_OLD",
-									"className": "ModuleScript",
-									"children": [],
-									"filePaths": [
-										"Scripts/ServerScriptService/OldCopies/UnitManagerService_OLD.lua"
-									]
-								},
-								{
-									"name": "UnitValuesService_OLD",
-									"className": "ModuleScript",
-									"children": [],
-									"filePaths": [
-										"Scripts/ServerScriptService/OldCopies/UnitValuesService_OLD.lua"
-									]
-								}
-							],
-							"filePaths": [
-								"Scripts/ServerScriptService/OldCopies"
 							]
 						}
 					],

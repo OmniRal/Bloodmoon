@@ -49,9 +49,11 @@ export type BaseStates = {
     Taunt: {Active: boolean, Goal: Vector3? | BasePart?}?,
 }
 
+-- The structure of an actual effect (buff / debuff)
 export type Effect = {
-    From: Player | Model | string,
-    IsBuff: boolean,
+	From: Player | Model | string,
+    IsDebuff: boolean,
+
     Name: string,
     Icon: number?,
     Description: string?,
@@ -62,22 +64,22 @@ export type Effect = {
     NumberStack: boolean?,
     Amount: number?,
     
-    Offsets: BaseAttributes?,
+    Attributes: {[string]: number},
+    States: {[string]: {Active: boolean, Point: string | CFrame?}},
 
-    States: BaseStates?,
-
-    CleanFunction: () -> (),
     CleanDelay: thread,
+    CleanFunction: (...any) -> (...any),
 
     Config: Configuration?,
 }
 
+-- Used when constructing a new effect
 export type EffectDetails = {
+	From: Player | Model | string,
     Name: string, 
-    From: Player | Model | string,
-    Description: string?, 
-    IsBuff: boolean, 
     Icon: number?, 
+    Description: string?, 
+    IsDebuff: boolean?, 
     Duration: number, 
     MaxStacks: number,
     DoNotDisplay: boolean?,

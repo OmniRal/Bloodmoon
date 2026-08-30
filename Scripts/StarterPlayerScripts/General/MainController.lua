@@ -30,6 +30,7 @@ local LevelController = require(ReplicatedStorage.Source.ClientModules.General.L
 local CameraController = require(StarterPlayer.StarterPlayerScripts.Source.General.CameraController)
 local MainUIController = require(StarterPlayer.StarterPlayerScripts.Source.General.MainUIController)
 --local AnimationController = require(StarterPlayer.StarterPlayerScripts.Source.General.AnimationController)
+local LightingController = require(ReplicatedStorage.Source.ClientModules.General.LightingController)
 
 local Utility = require(ReplicatedStorage.Source.SharedModules.General.Utility)
 
@@ -289,6 +290,8 @@ function MainController:Deferred()
 	Camera:GetPropertyChangedSignal("CFrame"):Connect(function() 
 		if not PlayerInfo.PushStarted then return end
 	end)
+
+	LightingController.Set(LightingController.GetSetting("MoonStart"), 3)
 
 	print("Main Controller Deferred...")
 end

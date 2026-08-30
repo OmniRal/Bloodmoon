@@ -74,7 +74,7 @@ local function PlaceTrees(LevelName: string, TreeFolder: Folder)
 		NewTree.Visual:PivotTo(
 			BaseTree.CFrame *
 			CFrame.new(RNG:NextNumber(-0.5, 0.5), 0, RNG:NextNumber(-0.5, 0.5)) *
-			CFrame.Angles(0, math.rad(RNG:NextInteger(-15, 15)), 0)
+			CFrame.Angles(math.rad(RNG:NextInteger(-5, 5)), RNG:NextNumber(-math.pi, math.pi), math.rad(RNG:NextInteger(-5, 5)))
 		)
 		NewTree.Parent = TreeFolder
 
